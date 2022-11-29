@@ -1,0 +1,255 @@
+{% capture brand_json %}
+[
+    {% for vendor in shop.vendors %}
+        {%- assign taka_vendor = settings.taka_vendor | strip | downcase | split: "," -%}
+        {%- assign vendor_downcase = vendor | downcase -%}
+        {%- assign taka_title = "" -%}
+        {%- for v in taka_vendor -%}
+            {%- if v contains vendor_downcase -%}
+            {%- assign taka_title = v | split: "_" | last -%}
+            {%- break -%}
+            {%- endif -%}
+        {%- endfor -%}
+        {%- assign grouped = vendor | split: "" -%}
+    {
+        "group": "{{ grouped[0] | downcase }}",
+        "name_en": "{{ vendor }}",
+        "name_jp": "{{- taka_title | strip -}}",
+        "url": "{{ vendor | url_for_vendor }}"
+    }
+    {%- unless forloop.last -%}
+    ,
+    {%- endunless -%}
+    {%- endfor -%}
+]
+{% endcapture %}
+
+<div class="brand">
+    <div class="container">
+        <div class="page-header">
+            <nav aria-label="{{ 'general.breadcrumb.title' | t }}" class="breadcrumb breadcrumb--floating text--xsmall">
+            <ol class="breadcrumb__list" role="list">
+                <li class="breadcrumb__item">
+                <a class="breadcrumb__link" href="{{ routes.root_url }}">{{ 'general.breadcrumb.home' | t }}</a>
+                </li>
+
+                <li class="breadcrumb__item">
+                <span class="breadcrumb__link" aria-current="page">{{ page.title | escape }}</span>
+                </li>
+            </ol>
+            </nav>
+            <div class="page-header__text-wrapper text-container">
+                <h1 class="heading h2">{{ page.title | escape }}</h1>
+            </div>
+        </div>
+        <div class="brand-row">
+            <div class="brand-search">
+                <input type="text" class="js-search" placeholder="ブランド名で検索" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="19.316" height="19.667" viewBox="0 0 19.316 19.667">
+                    <path id="Path_11920" data-name="Path 11920" d="M1503.445,567.137l-4.815-4.814a7.672,7.672,0,1,0-.5.466l4.83,4.83a.341.341,0,0,0,.482-.482Zm-17.278-10.165a6.981,6.981,0,1,1,6.981,6.981A6.981,6.981,0,0,1,1486.167,556.972Z" transform="translate(-1484.885 -548.709)" fill="none" stroke="#222" stroke-width="1.2"/>
+                </svg>
+            </div>
+            <div class="brand-filter">
+                <div class="brand-sticky">
+                    <ul class="brand-filter-list">
+                        <li><a href="#brand-A">A</a></li>
+                        <li><a href="#brand-B">B</a></li>
+                        <li><a href="#brand-C">C</a></li>
+                        <li><a href="#brand-D">D</a></li>
+                        <li><a href="#brand-E">E</a></li>
+                        <li><a href="#brand-F">F</a></li>
+                        <li><a href="#brand-G">G</a></li>
+                        <li><a href="#brand-H">H</a></li>
+                        <li><a href="#brand-I">I</a></li>
+                        <li><a href="#brand-J">J</a></li>
+                        <li><a href="#brand-K">K</a></li>
+                        <li><a href="#brand-L">L</a></li>
+                        <li><a href="#brand-M">M</a></li>
+                        <li><a href="#brand-N">N</a></li>
+                        <li><a href="#brand-O">O</a></li>
+                        <li><a href="#brand-P">P</a></li>
+                        <li><a href="#brand-Q">Q</a></li>
+                        <li><a href="#brand-R">R</a></li>
+                        <li><a href="#brand-S">S</a></li>
+                        <li><a href="#brand-T">T</a></li>
+                        <li><a href="#brand-U">U</a></li>
+                        <li><a href="#brand-V">V</a></li>
+                        <li><a href="#brand-W">W</a></li>
+                        <li><a href="#brand-Y">Y</a></li>
+                        <li><a href="#brand-Z">Z</a></li>
+                        <li><a href="#brand-other">その他</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="brand-wrapper" class="brand-wrapper"></div>
+        </div>
+    </div>
+    
+</div>
+
+<style>
+    .brand-row {
+        max-width: 1000px;
+        margin: 0 auto 182px;
+        padding-top: 6px;
+    }
+    .brand-search {
+        margin-bottom: 40px;
+        position: relative;
+    }
+    .brand-search svg {
+        position: absolute;
+        top: 50%;
+        transform: translatey(-50%);
+        right: 33px;
+    }
+    .brand-search input {
+        width: 100%;
+        border-radius: 90px;
+        background: #F7F7F7;
+        border: 0;
+        height: 70px;
+        line-height: 70px;
+        padding: 0 40px;
+        letter-spacing: 0.03em;
+        color: #222;
+    }
+    .brand-filter-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .brand-filter-list li a {
+        min-width: 40px;
+        height: 40px;
+        line-height: 38px;
+        border-radius: 62px;
+        border: 1px solid #E3E3E3;
+        text-align: center;
+        display: block;
+    }
+    .brand-filter-list li:last-child a {
+        padding: 0 20px;
+    }
+    .brand-group {
+        overflow: hidden;
+    }
+    .brand-current-group {
+        font-family: var(--font-URM-DIN);
+        font-size: 34px;
+        line-height: 44px;
+        letter-spacing: 0.06em;
+        font-weight: 600;
+        position: relative;
+        margin-bottom: 23px;
+        text-transform: uppercase;
+    }
+    .brand-current-group:before {
+        content: "";
+        position: absolute;
+        height: 1px;
+        width: calc(100% - 52px);
+        background: #E3E3E3;
+        right: 0;
+        top: calc(50% + 2px);
+    }
+    .brand-filter {
+        margin-bottom: 83px;
+    }
+    .brand-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 27px 0;
+    }
+    .brand-list .brand-item {
+        width: 25%;
+        padding-right: 20px;
+    }
+    .brand-list p {
+        margin: 0;
+    }
+    .brand-list .brand-name-en {
+        text-transform: uppercase;
+        font-weight: 500;
+        color: #222;
+    }
+    .brand-list .brand-name-jp {
+        font-size: 11px;
+        line-height: 16px;
+        letter-spacing: 0.03em;
+        color: #868686;
+    }
+    .brand-group + .brand-group {
+        margin-top: 59px;
+    }
+    @media screen and (max-width: 640px) {
+        .brand-row {
+            padding-top: 0;
+            margin-top: -3px;
+            margin-bottom: 86px;
+        }
+        .brand-search {
+            margin-bottom: 30px;
+        }
+        .brand-search input {
+            height: 50px;
+            padding-left: 27px;
+        }
+        .brand-filter {
+            margin-bottom: 52px;
+        }
+        .brand-filter-list {
+            gap: 10px 9px;
+        }
+        .brand-filter-list li a {
+            min-width: 34px;
+            height: 34px;
+            line-height: 30px;
+        }
+        .brand-group + .brand-group {
+            margin-top: 50px;
+        }
+        .brand-current-group {
+            font-size: 26px;
+            line-height: 34px;
+            margin-bottom: 26px;
+        }
+        .brand-current-group:before {
+            width: calc(100% - 39px);
+            top: calc(50% + 1px);
+            border-bottom: 26px;
+        }
+        .brand-list {
+            gap: 20px 0;
+        }
+        .brand-list .brand-item {
+            width: 100%;
+        }
+        .brand-list .brand-name-jp {
+            font-size: 10px;
+            line-height: 15px;
+            margin-top: 3px;
+        }
+        .brand-search svg {
+            right: 24px;
+            width: 15px;
+        }
+    }
+</style>
+<script id="brand-data" type="text/html">{{brand_json}}</script>
+
+{{ 'custom-brand.js' | asset_url | script_tag }}
+{% schema %}
+  {
+    "name": "Brand list",
+    "class": "shopify-section--brand",
+    "presets": [
+        {
+            "category": "Advance",
+            "name":"Brand list"
+        }
+    ]
+  }
+{% endschema %}
